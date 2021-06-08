@@ -1,0 +1,279 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<jsp:include page="../includes/header.jsp" />
+<jsp:include page="../includes/sidebar.jsp" />
+	<div class="mobile-menu-overlay"></div>
+
+	<div class="main-container">
+		<!-- <div class="modify cursor-pointer">
+			<i class="icon-copy ion-edit fa-lg"></i>
+			<span>게시글 수정</span>
+		</div>
+		<div class="popover-wrapper">
+	        <i class="icon-copy fa fa-ellipsis-h cursor-pointer" aria-hidden="true" data-toggle="popover" id="boardpopover"></i>   
+	    </div> -->
+	  	<div class="row justify-content-md-center" >
+		  	<div class="col-sm-12 col-md-6 mb-4">
+		  	<div class="card card-box myp-15">
+			  	<div class="card-body p-3 bg-mygray radius btn-block cursor-pointer" id="registerBoard">
+				오늘의 순간들은 어떠셨나요? 당신의 순간들을 기록하세요....
+			   	</div>
+		  	</div>
+		  	</div>
+	  	</div>
+	  	<!-- 게시글 modal -->
+		<div class="modal fade boardModal" id="boardModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="myLargeModalLabel">게시글 등록</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					</div>
+					<div class="modal-body">
+						<form action="" method="post" class="needs-validation" novalidate>
+			            	<div class="form-group">
+			    				<input type="text" class="form-control" placeholder="게시글 제목을 입력하세요" id="title" name="title" required>
+			    				<div class="valid-feedback">Valid.</div>
+			       				<div class="invalid-feedback">Check this checkbox to continue.</div>
+			  				</div>
+			                <div class="form-group">
+			    				<textarea class="form-control" rows="10" placeholder="게시글 내용을 입력하세요" id="content" name="content" required></textarea>
+			    				<div class="valid-feedback">Valid.</div>
+			       				<div class="invalid-feedback">Check this checkbox to continue.</div>
+			  				</div>
+			                <div class="form-group">
+			    				<input type="text" class="form-control" placeholder="작성자을 입력하세요" id="writer" name="writer" required>
+			    				<div class="valid-feedback">Valid.</div>
+			       				<div class="invalid-feedback">Check this checkbox to continue.</div>
+			  				</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button id="modRegBtn" type="button" class="btn btn-primary btn-block ac" data-dismiss="modal">게시</button>
+						<button id="modModBtn" type="button" class="btn btn-primary btn-block" data-dismiss="modal">수정</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		 <!-- 게시글 modal 끝 -->
+		 
+		
+	  	<div class="row justify-content-md-center" id="boardArea">
+			<div class="board col-sm-12 col-md-6">
+				<!-- <div class="card shadow mb-4">
+			     	<div class="card-header py-3">
+			       		<h5 class="m-0 font-weight-bold">'+list[i].writer+'</h5>
+						<h6 class="m-0 font-weight-bold">'+ boardService.displayTime(list[i].regdate) +'</h6>
+			        </div>
+			        <div class="card-body">
+						<h4 class="card-title">'+ list[i].title +'</h4>
+						<p class="card-text">'+ list[i].content +'</p>
+			        </div>
+			    </div> -->
+			</div>
+	  	</div>
+	  	<div class="row justify-content-md-center">
+		<div class="col-sm-12 col-md-6">
+			<button id="btnShowMore" class="btn btn-primary btn-block my-4">더보기</button>
+  		</div>
+  		</div>
+  		<script>
+			// Disable form submissions if there are invalid fields
+			(function() {
+			  'use strict';
+			  window.addEventListener('load', function() {
+			    // Get the forms we want to add validation styles to
+			    var forms = document.getElementsByClassName('needs-validation');
+			    // Loop over them and prevent submission
+			    var validation = Array.prototype.filter.call(forms, function(form) {
+			      form.addEventListener('submit', function(event) {
+			        if (form.checkValidity() === false) {
+			          event.preventDefault();
+			          event.stopPropagation();
+			        }
+			        form.classList.add('was-validated');
+			      }, false);
+			    });
+			  }, false);
+			})();
+		</script>
+		<script src="/resources/js/board.js"></script>
+		<script>
+			
+			 $(function() {
+				 
+			 	var boardDIV = $(".board");
+				
+			 	//게시글 수정 삭세 팝오버
+				boardDIV.on("click", '[data-toggle="popover"]',function(){
+					console.log($(this).closest(".card").data("bno"));
+					bno = $(this).closest(".card").data("bno");
+					$(this).popover({
+						 placement : 'bottom',
+						 html : true,
+						 content : 	'<div class="modify cursor-pointer">' +
+					        		'	<i class="icon-copy ion-edit fa-lg"></i>' +
+					        		'	<span>게시글 수정</span>' +
+					       			'</div>' +
+					       			'<div class="remove cursor-pointer">' +
+						        	'	<i class="icon-copy ion-trash-a fa-lg"></i>' +
+									'	<span class="pl-1">게시글 삭제</span>' +
+					       			'</div>'
+					})
+				}); 
+				 
+			 	var pageNum = 1;
+			 	
+			 	showList(1);
+			 	
+			 	function showList(page) {
+			 		//목록 호출
+					boardService.getList({page:page}, function(result) {
+						
+						var list = result.list;
+						console.log(result);
+						console.log(list);
+						
+						if(page == -1) showList(result.realEnd);
+						
+						var str ="";
+						//boardDIV.html("");
+						for(var i in list) {
+							str += '<div class="card card-box mb-4 postCard" data-bno="' + list[i].bno + '" id="postCard">';
+							str += ' 	<div class="card-header py-3">';
+							str += ' 		<div class="float-left">';
+							str += '   			<h5 class="m-0 font-weight-bold">'+list[i].writer+'</h5>';
+							str += '			<h6 class="m-0 font-weight-bold">'+ boardService.displayTime(list[i].regdate) +'</h6>';
+							str += ' 		</div>';
+							str += ' 		<div class="popover-wrapper float-right">';
+							str += '			<i class="icon-copy fa fa-ellipsis-h cursor-pointer" aria-hidden="true" data-toggle="popover" id="boardpopover"></i>';
+							str += ' 		</div>';
+							str += '    </div>';
+							str += '    <div class="card-body">';
+							str += '		<h4 class="card-title">'+ list[i].title +'</h4>';
+							str += '		<p class="card-text">'+ list[i].content +'</p>';
+							str += '    </div>';
+							str += '</div>';
+						}
+						boardDIV.html(boardDIV.html()+str);
+					}) 
+			 	}
+			 	
+			 	//게시글 등록 모달 띄우기
+			 	$("#registerBoard").click(function() {
+			 		$(".modal-title").html("게시글 등록");
+		 			$("#boardModal").find("input").val("").prop("readonly", false);
+		 			$("#boardModal").find("textarea").val("");
+		 			
+		 			$("#modRegBtn").show();
+		 			$("#modModBtn").hide();
+		 			$("#boardModal").modal("show");	
+		 		});
+			 	
+			 	//수정 모달 띄우기
+				$(document).on("click", ".popover .modify span", function() {
+		 			console.log(bno);
+		 			//상세글 호출
+					boardService.get(bno, function(result) {
+						console.log(result);
+						$(".modal-title").html("게시글 수정");
+						$("#title").val(result.title);
+						$("#content").val(result.content);
+						$("#writer").val(result.writer).prop("readonly", true);
+						$("#boardModal").data("bno", bno);
+						$("#modRegBtn").hide();
+			 			$("#modModBtn").show();
+						$("#boardModal").modal("show");
+						//console.log(bno);
+					});
+					$(this).parents(".popover").popover('hide');
+		 		});
+			 	
+			 	//등록적용 이벤트
+		 		$("#modRegBtn").click(function() {
+		 			var board = {title:$("#title").val(), content:$("#content").val(), writer:$("#writer").val()}
+		 			console.log(board);
+		 			boardService.register(board, function(result) {
+						alert(result);
+						boardService.get(result, function(result1) {
+							//$(".RegModal").modal("hide");
+							//$("#boardArea").reload();
+							//location.reload(true);
+							str ="";
+							str += '<div class="card card-box mb-4 postCard" data-bno="' + result1.bno + '" id="postCard">';
+							str += ' 	<div class="card-header py-3">';
+							str += ' 		<div class="float-left">';
+							str += '   			<h5 class="m-0 font-weight-bold">'+result1.writer+'</h5>';
+							str += '			<h6 class="m-0 font-weight-bold">'+ boardService.displayTime(result1.regdate) +'</h6>';
+							str += ' 		</div>';
+							str += ' 		<div class="popover-wrapper float-right">';
+							str += '			<i class="icon-copy fa fa-ellipsis-h cursor-pointer" aria-hidden="true" data-toggle="popover" id="boardpopover"></i>';
+							str += ' 		</div>';
+							str += '    </div>';
+							str += '    <div class="card-body">';
+							str += '		<h4 class="card-title">'+ result1.title +'</h4>';
+							str += '		<p class="card-text">'+ result1.content +'</p>';
+							str += '    </div>';
+							str += '</div>';
+							boardDIV.prepend(str);
+						});
+					}); 
+		 		});
+			 	
+		 		//수정적용 이벤트
+		 		$("#modModBtn").click(function() {
+		 			var board = {bno:bno, title:$("#title").val(), content:$("#content").val(), writer:$("#writer").val()}
+		 			console.log(board);
+		 			boardService.modify(board, function(result) {
+						alert(result);
+						$(".boardModal").modal("hide");
+						boardService.get(bno, function(result1) {
+							console.log(result1);
+							$(".card").each(function() {
+								if($(this).data("bno") == bno) {
+									console.log(this);
+									$(this).find(".card-title").html(result1.title);
+									$(this).find(".card-text").html(result1.content);
+								}
+							})
+						})
+						//location.reload(true);
+					}); 
+		 		});
+		 		
+		 		//삭제적용 이벤트
+		 		$(document).on("click", ".popover .remove", function() {
+		 			boardService.remove(bno, function(result) {
+						alert(result);
+						console.log(result);
+						$(".card").each(function() {
+							if($(this).data("bno") == bno) {
+								$(this).remove();
+							}
+						})
+						//location.reload(true);
+					}); 
+		 			$(this).parents(".popover").popover('hide');
+		 		});
+		 		
+				//btnShowMore 이벤트(게시글 10개씩 더보기)
+		 		$("#btnShowMore").click(function() {
+		 			// showList() 호출 
+		 			showList(++pageNum);
+		 		});
+				
+		 		/* //스크롤 바닥 감지
+				window.onscroll = function(e) {
+				    //추가되는 임시 콘텐츠
+				    //window height + window scrollY 값이 document height보다 클 경우,
+				    if((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+				    	// showList() 호출 
+			 			showList(pageNum++);
+				    }
+				}; */
+			}); 
+			
+		</script>
+	</div>
+<jsp:include page="../includes/footer.jsp" />	

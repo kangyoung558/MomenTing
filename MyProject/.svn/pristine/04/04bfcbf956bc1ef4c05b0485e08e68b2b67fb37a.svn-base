@@ -1,0 +1,91 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<jsp:include page="../includes/header.jsp" />
+<jsp:include page="../includes/sidebar.jsp" />
+	<div class="mobile-menu-overlay"></div>
+
+	<div class="main-container">
+		
+	  	<div class="row justify-content-md-center">
+	   	<div class="col col-lg-2">
+	      1 of 3
+	   	</div>
+	  	<div class="col-md-auto">
+	      Variable width content
+	   	</div>
+	  	<div class="col col-lg-2">
+	      3 of 3
+	  	</div>
+	  	</div>
+	  	<div class="row">
+	 	 <div class="col">
+	      1 of 3
+	  	</div>
+	  	<div class="col-md-auto">
+	  	    Variable width content
+	  	</div>
+	  	<div class="col col-lg-2">
+	      3 of 3
+	  	</div>
+	  	</div>
+		
+		<div class="board">
+			<!-- <div class="card shadow mb-4">
+		     	<div class="card-header py-3">
+		       		<h5 class="m-0 font-weight-bold">'+list[i].writer+'</h5>
+					<h6 class="m-0 font-weight-bold">'+ boardService.displayTime(list[i].regdate) +'</h6>
+		        </div>
+		        <div class="card-body">
+					<h4 class="card-title">'+ list[i].title +'</h4>
+					<p class="card-text">'+ list[i].content +'</p>
+		        </div>
+		    </div> -->
+		</div>
+		<button id="btnShowMore" class="btn btn-primary btn-block my-4">더보기</button>
+		<script src="/resources/js/board.js"></script>
+		<script>
+		
+			 $(function() {
+			 	var boardDIV = $(".board");
+			 	var pageNum = 1;
+			 	
+			 	showList(1);
+			 	
+			 	function showList(page) {
+			 		//목록 호출
+					boardService.getList({page:page}, function(result) {
+						
+						var list = result.list;
+						console.log(result);
+						console.log(list);
+						
+						if(page == -1) showList(result.realEnd);
+						
+						var str ="";
+						//boardDIV.html("");
+						for(var i in list) {
+							str += '<div class="card shadow mb-4" data-bno="' + list[i].bno + '">';
+							str += ' 	<div class="card-header py-3">';
+							str += '   		<h5 class="m-0 font-weight-bold">'+list[i].writer+'</h5>';
+							str += '		<h6 class="m-0 font-weight-bold">'+ boardService.displayTime(list[i].regdate) +'</h6>';
+							str += '    </div>';
+							str += '    <div class="card-body">';
+							str += '		<h4 class="card-title">'+ list[i].title +'</h4>';
+							str += '		<p class="card-text">'+ list[i].content +'</p>';
+							str += '    </div>';
+							str += '</div>';
+						}
+						boardDIV.html(boardDIV.html()+str);
+					}) 
+			 	}
+				//btnShowMore 이벤트
+		 		$("#btnShowMore").click(function() {
+		 			// showList() 호출 
+		 			showList(pageNum++);
+		 		}); 
+			}); 
+			
+		</script>
+	</div>
+<jsp:include page="../includes/footer.jsp" />	

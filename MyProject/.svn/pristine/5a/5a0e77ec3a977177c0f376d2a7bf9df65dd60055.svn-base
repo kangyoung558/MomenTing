@@ -1,0 +1,10 @@
+package com.momtenting.service;
+
+import com.momtenting.domain.MemberVo;
+
+public interface MemberService {
+	
+	void register(MemberVo memberVo); //회원가입
+	
+	
+}

@@ -1,0 +1,53 @@
+@CHARSET "UTF-8";
+* {
+	font-family: 'Noto Sans KR', sans-serif;
+}
+.img-size{
+	max-height: 150px;
+	max-width: 150px;
+}
+
+.bg-mygray {
+	background-color: #f0f2f5;
+}
+.bg-reply {
+	background-color: #f8f9fa;
+}
+
+.text-moment {
+	color: #F5dF4D;
+}
+.btn-moment {
+	color: #fff !important;
+	background-color: #F5dF4D !important;
+	border-color: #F5dF4D !important; 
+}
+.btn-outline-moment {
+	color: #F5dF4D !important;
+	background-color: #fff !important;
+	border-color: #F5dF4D !important; 
+}
+input[id="moment"]{
+	border: 2px solid #F5dF4D !important;
+}
+.btn-outline-moment:hover {
+	color: #fff !important;
+	background-color: #F5dF4D !important;
+	border-color: #F5dF4D !important; 
+}
+.btn-moment:hover {
+	color: #fff !important;
+	background-color: #d4bf37 !important;
+	border-color: #d4bf37 !important; 
+}
+.moment-link {
+	color: #555;
+	text-decoration: none;
+}
+.moment-link:HOVER {
+	color : #d4bf37 !important; 
+}
+.mygray{color:#85837e; }
+.radius{ border-radius: 20px;}
+.myp-15{padding: 15px;}
+.cursor-pointer{cursor: pointer;}

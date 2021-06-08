@@ -1,0 +1,12 @@
+@CHARSET "UTF-8";
+
+.bg-mygray {
+	background-color: #f0f2f5;
+}
+.bg-reply {
+	background-color: #f8f9fa;
+}
+.mygray{color:#85837e; }
+.radius{ border-radius: 20px;}
+.myp-15{padding: 15px;}
+.cursor-pointer{cursor: pointer;}

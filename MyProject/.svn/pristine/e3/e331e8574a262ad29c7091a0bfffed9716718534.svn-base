@@ -1,0 +1,19 @@
+@CHARSET "UTF-8";
+* {
+	font-family: 'Noto Sans KR', sans-serif;
+}
+.img-size{
+	max-height: 150px;
+	max-width: 150px;
+}
+
+.bg-mygray {
+	background-color: #f0f2f5;
+}
+.bg-reply {
+	background-color: #f8f9fa;
+}
+.mygray{color:#85837e; }
+.radius{ border-radius: 20px;}
+.myp-15{padding: 15px;}
+.cursor-pointer{cursor: pointer;}

@@ -1,0 +1,18 @@
+package com.momtenting.mapper;
+
+import org.apache.ibatis.annotations.Insert;
+
+import com.momtenting.domain.AuthVo;
+import com.momtenting.domain.MemberVo;
+
+public interface MemberMapper {
+	
+	
+	@Insert("insert into tbl_member(userid, userpw, username, phonenumber) values(#{userid}, #{userpw}, #{userName}, #{phonenumber})")
+	void insert(MemberVo memberVo);
+	
+	@Insert("insert into tbl_member_auth(userid, auth) values(#{userid}, 'ROLE_MEMBER')")
+	void insertAuth(AuthVo authVo);
+	
+	MemberVo read(String userid);
+}
